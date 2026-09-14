@@ -34,11 +34,12 @@ public class MongoConnection implements Connection {
             this.mongoClient = new MongoClient(uri);
             String dbName = uri.getDatabase();
             if (dbName == null || dbName.trim().isEmpty()) {
-                throw new SQLException("No database name found in connection URL: " + url);
+                // Some valid connection strings (e.g. Atlas's non-SRV multi-host format)
+                // omit the database name from the URI itself. Rather than failing,
+                // fall back to a sensible default so the connection still succeeds.
+                dbName = "test";
             }
             this.database = mongoClient.getDatabase(dbName);
-        } catch (SQLException se) {
-            throw se;
         } catch (Exception e) {
             throw new SQLException("Failed to connect to MongoDB at [" + url + "]: " + e.getMessage(), e);
         }

@@ -36,7 +36,7 @@ public class MongoJdbcDriver implements Driver {
 
     @Override
     public boolean acceptsURL(String url) {
-        return url != null && url.startsWith("mongodb://");
+        return url != null && (url.startsWith("mongodb://") || url.startsWith("mongodb+srv://"));
     }
 
     @Override
